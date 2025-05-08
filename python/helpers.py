@@ -17,7 +17,7 @@ def endless_input(title, *options):
 
 
 def print_matched_rules(results: ScanResults, file_path: Path, text: str, tabs:int = 0, iocs=None):
-    if results.matching_rules:
+    if results and results.matching_rules:
         print(f"\n{'\t'*tabs}{text} {file_path.resolve()}")
         print(f"{'\t'*tabs}🔍 Сработавшие правила:")
         for rule in results.matching_rules:
