@@ -84,33 +84,6 @@ rule INDICATOR_RTF_EXPLOIT_CVE_2017_11882_1 {
 }
 
 
-rule INDICATOR_RTF_EXPLOIT_CVE_2017_11882_4 {
-  meta:
-    description = "Обнаружение потенциальной эксплуатации уязвимостей CVE-2018-0802 or CVE-2017-11882 в RTF документе"
-    author      = "ditekSHen"
-
-  strings:
-    // equation.3 manipulated
-    // is slowing down scanning, but good detection rate
-    $s1   = { (36 | 34) [0-50] 35 [0-50] (37 | 35) [0-50] 31 [0-50] (37 | 35) [0-50] 35 [0-50] (36 | 34) [0-50] 31 [0-50] (37 | 35) [0-50] 34 [0-50] (36 | 34) [0-50] 39 [0-50] (36 | 34) [0-50] 66 [0-50] (36 | 34) [0-50] 65 [0-50] 32 [0-50] 65 [0-50] 33 [0-50] 33 }
-    $s2   = { (7d | 5c | 2b | 24) [0-50] (37 | 35) [0-50] 31 [0-50] (37 | 35) [0-50] 35 [0-50] (36 | 34) [0-50] 31 [0-50] (37 | 35) [0-50] 34 [0-50] (36 | 34) [0-50] 39 [0-50] (36 | 34) [0-50] 66 [0-50] (36 | 34) [0-50] 65 [0-50] 32 [0-50] 65 [0-50] 33 [0-50] 33 }
-    //$s3 = { 32[0-20](43|63)[0-20](45|65)[0-20]30[0-20]32[0-20]30[0-20]30[0-20]30[0-20]30[0-20]30[0-20]30[0-20]30[0-20]30[0-20](43|63)[0-20]30[0-20]30[0-20]30[0-20]30[0-20]30[0-20]30[0-20]30[0-20]30[0-20]30[0-20]30[0-20]30[0-20]30[0-20]30[0-20]34[0-20]36 }
-    // NOT slowing down scanning, but FN prone
-    // $s3 = { (36|34)[0-1]35[0-1](37|35)[0-1]31[0-1](37|35)[0-1]35[0-1](36|34)[0-1]31[0-1](37|35)[0-1]34[0-1](36|34)[0-1]39[0-1](36|34)[0-1]66[0-1](36|34)[0-1]65[0-1]3265[0-1]3333 }
-    //$s4 = { (7d|5c|2b|24)[0-1](37|35)[0-1]31[0-1](37|35)[0-1]35[0-1](36|34)[0-1]31[0-1](37|35)[0-1]34[0-1](36|34)[0-1]39[0-1](36|34)[0-1]66[0-1](36|34)[0-1]65[0-1]3265[0-1]3333 }
-    // Embedded Objects
-    $obj1 = "\\objhtml" ascii
-    $obj2 = "\\objdata" ascii
-    $obj3 = "\\objupdate" ascii
-    $obj4 = "\\objemb" ascii
-    $obj5 = "\\objautlink" ascii
-    $obj6 = "\\objlink" ascii
-    $obj7 = "\\mmath" ascii
-
-  condition:
-    uint32(0) == 0x74725c7b and (1 of ($s*) and 1 of ($obj*))
-}
-
 rule RTF_CVE_2018_0802_Exploit {
     meta:
         description = "Обнаружение эксплатации уязвимости CVE-2018-0802"
@@ -158,3 +131,27 @@ rule RTF_Equation_Editor_CVE_2018_0798 {
   condition:
   $RTF at 0 and $S1 
 } 
+
+rule RTF_Detect_WMI_Usage
+{
+    meta:
+        description = "Обнаружение файлов или скриптов, которые содержат строки, указываюшщие наDetects files or scripts that contain strings indicating usage of Windows Management Instrumentation (WMI)"
+
+    strings:
+        // Common WMI-related keywords in scripts or binaries
+        $wmi1 = "Get-WMIObject" nocase
+        $wmi2 = "Invoke-WmiMethod" nocase
+        $wmi3 = "wmiclass" nocase
+        $wmi4 = "Win32_Process" nocase
+        $wmi5 = "WMI" nocase
+        $wmi6 = "root\\CIMV2" nocase
+        $wmi7 = "ManagementObjectSearcher" nocase
+        $wmi8 = "ManagementObject" nocase
+        $wmi9 = "SWbemServices" nocase
+        $wmi10 = "wmic.exe" nocase
+        $wmi11 = "scrobj.dll" nocase  // used in WMI scriptlet execution (Squiblydoo technique)
+
+    condition:
+        any of ($wmi*) 
+}
+

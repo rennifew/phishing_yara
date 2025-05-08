@@ -128,13 +128,11 @@ rule VBA_May_run_an_executable_file_or_a_system_command {
     $ = "vbNormalNoFocus" ascii nocase wide
     $ = "vbMinimizedNoFocus" ascii nocase wide
     $ = "WScript.Shell" ascii nocase wide
-    $ = "Run" ascii nocase wide
     $ = "ShellExecute" ascii nocase wide
     $ = "ShellExecuteA" ascii nocase wide
     $ = "shell32" ascii nocase wide
     $ = "InvokeVerb" ascii nocase wide
     $ = "InvokeVerbEx" ascii nocase wide
-    $ = "DoIt" ascii nocase wide
 
   condition:
     any of them
@@ -180,17 +178,6 @@ rule VBA_May_Run_Executable_or_System_Command_Using_PowerShell {
 
   condition:
     $start_process
-}
-
-rule VBA_May_Call_DLL_Using_XLM_XLF {
-  meta:
-    description = "Обнаружение вызова DLL через Excel 4 Macros (XLM/XLF)"
-
-  strings:
-    $call = "CALL" ascii nocase wide
-
-  condition:
-    $call
 }
 
 rule VBA_May_Hide_Application {
@@ -306,17 +293,6 @@ rule VBA_May_Enumerate_Windows {
     any of them
 }
 
-rule VBA_May_Run_Code_From_DLL {
-  meta:
-    description = "Обнаружение вызова кода из DLL"
-
-  strings:
-    $lib = "Lib" ascii nocase wide
-
-  condition:
-    $lib
-}
-
 rule VBA_May_Run_Code_From_Library_On_Mac {
   meta:
     description = "Обнаружение вызова кода из библиотеки на Mac"
@@ -413,7 +389,7 @@ rule VBA_May_Obfuscate_Function_Calls {
 
 rule VBA_May_Obfuscate_Strings {
   meta:
-    description = "Обнаружение попытки обфускации строк"
+    description = "Обнаружение возможной попытки обфускации строк"
 
   strings:
     $chr        = "Chr" ascii nocase wide
@@ -580,4 +556,46 @@ rule VBA_May_Modify_Excel4_Formulas {
 
   condition:
     $formulafill
+}
+
+
+rule VBA_Reverse_Shell_Attempt {
+    meta:
+        description = "Обнаружение попытки обратного соединения (reverse shell) в коде макроса"
+
+    strings:
+        // Suspicious shell execution calls in VBA
+        $shell_call = /Shell\s*\(/ nocase
+        $wscript_shell = /CreateObject\s*\(\s*["']WScript\.Shell["']\s*\)/ nocase
+
+        // Common reverse shell commands or keywords often seen in VBA macros
+        $powershell = "powershell" nocase
+        $cmd = "cmd.exe" nocase
+        $nc = "nc.exe" nocase
+        $bash = "bash" nocase
+        $curl = "curl" nocase
+        $wget = "wget" nocase
+        $tcpclient = "New-Object Net.Sockets.TCPClient" nocase
+        $exec = "Exec" nocase
+        $redirect = "2>&1" nocase
+
+        // Patterns of suspicious IP:port or network connection strings (simple heuristic)
+        $ip_port = /(\d{1,3}\.){3}\d{1,3}:\d{2,5}/
+
+    condition:
+        // Must have shell execution call and one or more indicators of reverse shell commands or network activity
+        $shell_call and
+        (
+            $wscript_shell or
+            $powershell or
+            $cmd or
+            $nc or
+            $bash or
+            $curl or
+            $wget or
+            $tcpclient or
+            $exec or
+            $redirect or
+            $ip_port
+        )
 }

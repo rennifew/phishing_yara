@@ -1,10 +1,9 @@
-from io import BytesIO
-from yara_x import Scanner, ScanResults, Compiler, Rules
+from yara_x import Scanner
 from pathlib import Path
 import os
 import tempfile
-from python.olevba import VBA_Parser, VBA_Scanner, FileOpenError
-from python.rtfobj import rtf_iter_objects, RtfObjParser, is_rtf
+from python.olevba import VBA_Parser, VBA_Scanner
+from python.rtfobj import RtfObjParser
 from python.helpers import print_matched_rules
 
 
@@ -59,6 +58,8 @@ def process_file(file_path: Path, scanner: Scanner):
                             text='Найдено совпадение в файле:')
         if file_path.suffix == '.rtf':
             process_rtf_code(file_path, scanner)
+        elif file_path.suffix in ['.eml', '.lnk']:
+            pass
         else:
             process_vba_code(file_path, scanner)
     except Exception as e:
@@ -75,6 +76,15 @@ def process_rtf_code(file_path: Path, scanner: Scanner):
 def process_vba_code(file_path: Path, scanner: Scanner):
     vba_temp_path = extract_vba_macros_to_tempfile(str(file_path))
 
+    if vba_temp_path:
+        # Сканируем макросы
+        iocs = extract_iocs_from_vba_file(vba_temp_path)
+        vba_results = scanner.scan_file(vba_temp_path)
+        os.remove(vba_temp_path)
+        print_matched_rules(vba_results, file_path,
+                            text='Обнаружены макросы в файле:', tabs=1, iocs=iocs)
+        
+def process_eml(file_path: Path, scanner: Scanner):
     if vba_temp_path:
         # Сканируем макросы
         iocs = extract_iocs_from_vba_file(vba_temp_path)
