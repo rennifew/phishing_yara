@@ -1,12 +1,6 @@
 rule rtf_cve2017_11882_ole: malicious exploit cve_2017_11882 {
   meta:
-    author      = "John Davison"
     description = "Attempts to identify the exploit CVE 2017 11882"
-    reference   = "https://embedi.com/blog/skeleton-closet-ms-office-vulnerability-you-didnt-know-about"
-    sample      = "51cf2a6c0c1a29abca9fd13cb22421da"
-    score       = 60
-    //file_name = "re:^stream_[0-9]+_[0-9]+.dat$"
-    id          = "b6c59cf1-52e4-5c9e-b3c3-d973d52736e3"
 
   strings:
     $headers = { 1c 00 00 00 02 00 ?? ?? a9 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 03 01 01 03 ?? }
@@ -21,13 +15,7 @@ rule rtf_cve2017_11882_ole: malicious exploit cve_2017_11882 {
 // same as above but for RTF documents
 rule rtf_cve2017_11882: malicious exploit cve_2017_1182 {
   meta:
-    author      = "John Davison"
     description = "Attempts to identify the exploit CVE 2017 11882"
-    reference   = "https://embedi.com/blog/skeleton-closet-ms-office-vulnerability-you-didnt-know-about"
-    sample      = "51cf2a6c0c1a29abca9fd13cb22421da"
-    score       = 60
-    //file_ext = "rtf"
-    id          = "b6c59cf1-52e4-5c9e-b3c3-d973d52736e3"
 
   strings:
     $headers = {
@@ -46,11 +34,7 @@ rule rtf_cve2017_11882: malicious exploit cve_2017_1182 {
 
 rule packager_cve2017_11882 {
   meta:
-    author      = "Rich Warren"
     description = "Attempts to exploit CVE-2017-11882 using Packager"
-    reference   = "https://github.com/rxwx/CVE-2017-11882/blob/master/packager_exec_CVE-2017-11882.py"
-    score       = 60
-    id          = "57ff395e-e56a-5e63-bde6-f3cef038fcd6"
 
   strings:
     $font                 = { 30 61 30 31 30 38 35 61 35 61 }
@@ -66,12 +50,6 @@ rule packager_cve2017_11882 {
 rule CVE_2017_11882_RTF {
   meta:
     description = "Detects suspicious Microsoft Equation OLE contents as used in CVE-2017-11882"
-    license     = "Detection Rule License 1.1 https://github.com/Neo23x0/signature-base/blob/master/LICENSE"
-    author      = "Florian Roth (Nextron Systems)"
-    reference   = "Internal Research"
-    date        = "2018-02-13"
-    score       = 60
-    id          = "400689ff-e856-5cbf-a7fa-93f6a8d8dbb9"
 
   strings:
     $x1 = "4d534854412e4558452068747470"  /* MSHTA.EXE http */
@@ -91,9 +69,7 @@ rule CVE_2017_11882_RTF {
 
 rule EXP_potential_CVE_2017_11882 {
   meta:
-    author    = "ReversingLabs"
-    reference = "https://www.reversinglabs.com/newsroom/news/reversinglabs-yara-rule-detects-cobalt-strike-payload-exploiting-cve-2017-11882.html"
-    id        = "199710e0-5094-5940-ad29-f01383d5d8c2"
+    description = "Detects suspicious Microsoft Equation OLE contents as used in CVE-2017-11882"
 
   strings:
     $docfilemagic = { D0 CF 11 E0 A1 B1 1A E1 }
