@@ -28,7 +28,7 @@ def extract_vba_macros_to_tempfile(file_path: str) -> str | None:
 
 
 def extract_iocs_from_vba_file(vba_file_path: Path):
-    with open(vba_file_path, 'r') as f:
+    with open(vba_file_path, 'r', encoding='utf-8') as f:
         vba_scanner = VBA_Scanner(f.read())
         scan_results = vba_scanner.scan(include_decoded_strings=True)
         iocs = []

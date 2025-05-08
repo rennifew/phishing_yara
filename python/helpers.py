@@ -28,4 +28,4 @@ def print_matched_rules(results: ScanResults, file_path: Path, text: str, tabs:i
             for keyword, description in iocs:
                 print(f"{'\t'*tabs}-: {keyword} ({description})")
     else:
-        print(f'Совпадений в файле {file_path.resolve()} не ОБНАРУЖЕНО')
+        print('\n'+f'Совпадений в файле {file_path.resolve()} не ОБНАРУЖЕНО')
