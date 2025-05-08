@@ -1,10 +1,9 @@
 from yara_x import Scanner, ScanResults, Compiler, Rules
 from pathlib import Path
 import os
-from olevba import VBA_Parser, VBA_Scanner
+from python.olevba import VBA_Parser, VBA_Scanner
 import tempfile
-
-from helpers import print_matched_rules
+from python.helpers import print_matched_rules
 
 
 def extract_vba_macros_to_tempfile(file_path: str) -> str | None:

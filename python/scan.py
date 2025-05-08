@@ -1,7 +1,6 @@
 from pathlib import Path
 import os
-
-from process import process_file
+from python.process import process_file
 
 
 def scan_directory(malware_dir: Path, scanner):

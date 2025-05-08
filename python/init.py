@@ -1,13 +1,15 @@
 import logging
 
 from yara_x import Scanner, Compiler, Rules
-from scan import scan_ruleset_files
+from python.scan import scan_ruleset_files
+from pathlib import Path
 
 
 def init():
-    my_rules_path = "../yara_rules"
+    my_rules_relative_path = "./yara_rules"
+    my_rules_path = Path(my_rules_relative_path).resolve()
 
-    rules = compile_rules(my_rules_path)
+    rules = compile_rules(my_rules_path.resolve())
     scanner = Scanner(rules)
     return scanner
 
