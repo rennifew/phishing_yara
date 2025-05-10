@@ -109,19 +109,6 @@ rule RTF_CVE_2018_0802_Exploit {
         $objdata_marker
 }
 
-
-rule Empire_Invoke_Mimikatz_Gen {
-  meta:
-    description = "Обнаружение компонента Empire Invoke-Mimikatz.ps1"
-
-  strings:
-    $s1 = "= \"TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQ" ascii
-    $s2 = "Invoke-Command -ScriptBlock $RemoteScriptBlock -ArgumentList @($PEBytes64, $PEBytes32, \"Void\", 0, \"\", $ExeArgs)" fullword ascii
-
-  condition:
-    (uint16(0) == 0x7566 and filesize < 4000KB and 1 of them) or all of them
-}
-
 rule RTF_Equation_Editor_CVE_2018_0798 {
   meta:
     description   = "Обнаружение эксплуатации уязвимости CVE-2018-0798"
@@ -132,26 +119,4 @@ rule RTF_Equation_Editor_CVE_2018_0798 {
   $RTF at 0 and $S1 
 } 
 
-rule RTF_Detect_WMI_Usage
-{
-    meta:
-        description = "Обнаружение файлов или скриптов, которые содержат строки, указываюшщие наDetects files or scripts that contain strings indicating usage of Windows Management Instrumentation (WMI)"
-
-    strings:
-        // Common WMI-related keywords in scripts or binaries
-        $wmi1 = "Get-WMIObject" nocase
-        $wmi2 = "Invoke-WmiMethod" nocase
-        $wmi3 = "wmiclass" nocase
-        $wmi4 = "Win32_Process" nocase
-        $wmi5 = "WMI" nocase
-        $wmi6 = "root\\CIMV2" nocase
-        $wmi7 = "ManagementObjectSearcher" nocase
-        $wmi8 = "ManagementObject" nocase
-        $wmi9 = "SWbemServices" nocase
-        $wmi10 = "wmic.exe" nocase
-        $wmi11 = "scrobj.dll" nocase  // used in WMI scriptlet execution (Squiblydoo technique)
-
-    condition:
-        any of ($wmi*) 
-}
 

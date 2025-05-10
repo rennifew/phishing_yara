@@ -1,6 +1,6 @@
 rule rtf_cve2017_11882_ole: malicious exploit cve_2017_11882 {
   meta:
-    description = "Attempts to identify the exploit CVE 2017 11882"
+    description = "Детектирует обнаружение возможности эксплуатации CVE 2017 11882"
 
   strings:
     $headers = { 1c 00 00 00 02 00 ?? ?? a9 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 03 01 01 03 ?? }
@@ -15,7 +15,7 @@ rule rtf_cve2017_11882_ole: malicious exploit cve_2017_11882 {
 // same as above but for RTF documents
 rule rtf_cve2017_11882: malicious exploit cve_2017_1182 {
   meta:
-    description = "Attempts to identify the exploit CVE 2017 11882"
+    description = "Детектирует обнаружение возможности эксплуатации CVE 2017 11882"
 
   strings:
     $headers = {
@@ -34,7 +34,7 @@ rule rtf_cve2017_11882: malicious exploit cve_2017_1182 {
 
 rule packager_cve2017_11882 {
   meta:
-    description = "Attempts to exploit CVE-2017-11882 using Packager"
+    description = "Обнаружение возможной эксплуатации уязвимости CVE-2017-11882 используя Packager"
 
   strings:
     $font                 = { 30 61 30 31 30 38 35 61 35 61 }
@@ -49,7 +49,7 @@ rule packager_cve2017_11882 {
 
 rule CVE_2017_11882_RTF {
   meta:
-    description = "Detects suspicious Microsoft Equation OLE contents as used in CVE-2017-11882"
+    description = "Обнаружение Microsoft Equation содержимого в OLE, которые используются в CVE-2017-11882"
 
   strings:
     $x1 = "4d534854412e4558452068747470"  /* MSHTA.EXE http */
@@ -69,7 +69,7 @@ rule CVE_2017_11882_RTF {
 
 rule EXP_potential_CVE_2017_11882 {
   meta:
-    description = "Detects suspicious Microsoft Equation OLE contents as used in CVE-2017-11882"
+    description = "Обнаружение Microsoft Equation содержимого в OLE, которые используются в CVE-2017-11882"
 
   strings:
     $docfilemagic = { D0 CF 11 E0 A1 B1 1A E1 }

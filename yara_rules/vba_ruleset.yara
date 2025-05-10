@@ -1,52 +1,4 @@
-rule VBA_Using_System_Process {
-  meta:
-    description = "Обнаружение использования легитимных системных процессов для выполнения вредоносного кода"
 
-  strings:
-    $ = "rundll32.exe" ascii nocase wide
-    $ = "smss.exe" ascii nocase wide
-    $ = "csrss.exe" ascii nocase wide
-    $ = "wininit.exe" ascii nocase wide
-    $ = "services.exe" ascii nocase wide
-    $ = "lsass.exe" ascii nocase wide
-    $ = "svchost.exe" ascii nocase wide
-    $ = "explorer.exe" ascii nocase wide
-    $ = "taskhostw.exe" ascii nocase wide
-    $ = "ctfmon.exe" ascii nocase wide
-    $ = "winlogon.exe" ascii nocase wide
-    $ = "dwm.exe" ascii nocase wide
-    $ = "spoolsv.exe" ascii nocase wide
-    $ = "sihost.exe" ascii nocase wide
-    $ = "RuntimeBroker.exe" ascii nocase wide
-    $ = "ApplicationFrameHost.exe" ascii nocase wide
-
-  condition:
-    any of them
-}
-
-rule VBA_Process_Create {
-  meta:
-    description = "Обнаружение создание другого процесса в коде VBA макроса"
-
-  strings:
-    $ = "CreateProcessA" ascii nocase wide
-    $ = "WriteProcessMemory" ascii nocase wide
-
-  condition:
-    any of them
-}
-
-rule VBA_Potential_Persistence_Startup_Detected {
-  meta:
-    description = "Обнаружение попытки закрепления в папке автозагрузки Windows"
-
-  strings:
-    $ = "AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup" ascii nocase wide
-    $ = "Start Menu\\Programs\\Startup" ascii nocase wide
-
-  condition:
-    any of them
-}
 
 rule VBA_Read_System_Environment_Variables {
   meta:
@@ -114,30 +66,6 @@ rule VBA_May_Copy_File {
     VBA_Open_File and (any of them)
 }
 
-rule VBA_May_run_an_executable_file_or_a_system_command {
-  meta:
-    description = "Обнаружение запуска исполняемых файлов или системных команд в коде макроса"
-
-  strings:
-    $ = "Shell" ascii nocase wide
-    $ = "vbNormal" ascii nocase wide
-    $ = "vbNormalFocus" ascii nocase wide
-    $ = "vbHide" ascii nocase wide
-    $ = "vbMinimizedFocus" ascii nocase wide
-    $ = "vbMaximizedFocus" ascii nocase wide
-    $ = "vbNormalNoFocus" ascii nocase wide
-    $ = "vbMinimizedNoFocus" ascii nocase wide
-    $ = "WScript.Shell" ascii nocase wide
-    $ = "ShellExecute" ascii nocase wide
-    $ = "ShellExecuteA" ascii nocase wide
-    $ = "shell32" ascii nocase wide
-    $ = "InvokeVerb" ascii nocase wide
-    $ = "InvokeVerbEx" ascii nocase wide
-
-  condition:
-    any of them
-}
-
 rule VBA_May_run_a_dll {
   meta:
     description = "Обнаружение запуска динамической библиотеки (DLL) в коде макроса"
@@ -147,26 +75,6 @@ rule VBA_May_run_a_dll {
 
   condition:
     $dll
-}
-
-rule VBA_May_Run_PowerShell_Commands {
-  meta:
-    description = "Обнаружение запуска PowerShell-команд из макроса"
-
-  strings:
-    $powershell      = "powershell" ascii nocase wide
-    $noexit          = "noexit" ascii nocase wide
-    $executionpolicy = "ExecutionPolicy" ascii nocase wide
-    $noprofile       = "noprofile" ascii nocase wide
-    $command         = "command" ascii nocase wide
-    $encoded         = "EncodedCommand" ascii nocase wide
-    $invoke_command  = "invoke-command" ascii nocase wide
-    $scriptblock     = "scriptblock" ascii nocase wide
-    $iex             = "Invoke-Expression" ascii nocase wide
-    $authman         = "AuthorizationManager" ascii nocase wide
-
-  condition:
-    any of them
 }
 
 rule VBA_May_Run_Executable_or_System_Command_Using_PowerShell {
@@ -279,30 +187,6 @@ rule VBA_May_Run_Excel4_Macro_From_VBA {
 
   condition:
     $execxlm
-}
-
-rule VBA_May_Enumerate_Windows {
-  meta:
-    description = "Обнаружение перебора окон приложения"
-
-  strings:
-    $windows    = "Windows" ascii nocase wide
-    $findwindow = "FindWindow" ascii nocase wide
-
-  condition:
-    any of them
-}
-
-rule VBA_May_Run_Code_From_Library_On_Mac {
-  meta:
-    description = "Обнаружение вызова кода из библиотеки на Mac"
-
-  strings:
-    $libc  = "libc.dylib" ascii nocase wide
-    $dylib = "dylib" ascii nocase wide
-
-  condition:
-    any of them
 }
 
 rule VBA_May_Inject_Code_Into_Another_Process {
@@ -442,36 +326,6 @@ rule VBA_May_Detect_Virtualization {
     any of them
 }
 
-rule VBA_May_Detect_Anubis_Sandbox {
-  meta:
-    description = "Обнаружение признаков песочницы Anubis"
-
-  strings:
-    $getvolume     = "GetVolumeInformationA" ascii nocase wide
-    $getvolume2    = "GetVolumeInformation" ascii nocase wide
-    $productid     = "76487-337-8429955-22614" ascii nocase wide
-    $andy          = "andy" ascii nocase wide
-    $popupkiller   = "popupkiller" ascii nocase wide
-    $productid_reg = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\ProductId" ascii nocase wide
-    $exec_path     = "C:\\exec\\exec.exe" ascii nocase wide
-    $serial        = "1824245000" ascii nocase wide
-
-  condition:
-    any of them
-}
-
-rule VBA_May_Detect_Sandboxie {
-  meta:
-    description = "Обнаружение Sandboxie"
-
-  strings:
-    $sbiedll        = "SbieDll.dll" ascii nocase wide
-    $sandboxieclass = "SandboxieControlWndClass" ascii nocase wide
-
-  condition:
-    any of them
-}
-
 rule VBA_May_Detect_Sunbelt_Sandbox {
   meta:
     description = "Обнаружение Sunbelt Sandbox"
@@ -481,39 +335,6 @@ rule VBA_May_Detect_Sunbelt_Sandbox {
 
   condition:
     $fileexe
-}
-
-rule VBA_May_Detect_Norman_Sandbox {
-  meta:
-    description = "Обнаружение Norman Sandbox"
-
-  strings:
-    $currentuser = "currentuser" ascii nocase wide
-
-  condition:
-    $currentuser
-}
-
-rule VBA_May_Detect_CW_Sandbox {
-  meta:
-    description = "Обнаружение CW Sandbox"
-
-  strings:
-    $schmidti = "Schmidti" ascii nocase wide
-
-  condition:
-    $schmidti
-}
-
-rule VBA_May_Detect_WinJail_Sandbox {
-  meta:
-    description = "Обнаружение WinJail Sandbox"
-
-  strings:
-    $afx = "Afx:400000:0" ascii nocase wide
-
-  condition:
-    $afx
 }
 
 rule VBA_May_Disable_VBA_Security {

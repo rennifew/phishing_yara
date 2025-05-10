@@ -208,17 +208,6 @@ rule Flash_in_LNK {
     LNK_File and any of them
 }
 
-rule SMB_in_LNK {
-  meta:
-    description = "Обнаружены артефакты использования протокола SMB в файле ярлыка (LNK)."
-
-  strings:
-    $ = "\\c$\\" ascii wide nocase
-
-  condition:
-    LNK_File and any of them
-}
-
 rule Long_RelativePath_LNK {
   meta:
     description = "Обнаружены использования длинного относительного пути в файле ярлыка (LNK). Может быть использован для попытки скрытия пути файла."
@@ -263,4 +252,3 @@ rule CDN_in_LNK {
   condition:
     LNK_File and any of them
 }
-
