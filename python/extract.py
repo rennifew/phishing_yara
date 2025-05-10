@@ -1,7 +1,7 @@
 from pathlib import Path
 import tempfile
-from python.olevba import VBA_Parser, VBA_Scanner
-from python.rtfobj import RtfObjParser
+from python.tools.olevba import VBA_Parser, VBA_Scanner
+from python.tools.rtfobj import RtfObjParser
 
 
 def extract_vba_macros_to_tempfile(file_path: str) -> str | None:
@@ -38,14 +38,10 @@ def extract_from_rtf(file_path: Path):
 
 def extract_iocs_from_vba_file(vba_file_path: str):
     iocs = []
-    try:
-        with open(file=vba_file_path, mode='r', encoding='utf-8') as f:
-            vba_scanner = VBA_Scanner(f.read())
-            scan_results = vba_scanner.scan(include_decoded_strings=True)
-            for kw_type, keyword, description in scan_results:
-                if kw_type == "IOC":
-                    iocs.append((keyword, description))
-    except Exception as e:
-        print("Здесь хуйня ломается:", e)
-    return iocs
+    with open(file=vba_file_path, mode='r', encoding='utf-8') as f:
+        vba_scanner = VBA_Scanner(f.read())
+        scan_results = vba_scanner.scan(include_decoded_strings=True)
+        for kw_type, keyword, description in scan_results:
+            if kw_type == "IOC":
+                iocs.append((keyword, description))
 
