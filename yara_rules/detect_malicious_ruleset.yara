@@ -4,20 +4,20 @@ rule Detect_WMI_Usage {
 
   strings:
     // Common WMI-related keywords in scripts or binaries
-    $wmi1 = "Get-WMIObject" nocase
-    $wmi2 = "Invoke-WmiMethod" nocase
-    $wmi3 = "wmiclass" nocase
-    $wmi4 = "Win32_Process" nocase
-    $wmi5 = "WMI" nocase
-    $wmi6 = "root\\CIMV2" nocase
-    $wmi7 = "ManagementObjectSearcher" nocase
-    $wmi8 = "ManagementObject" nocase
-    $wmi9 = "SWbemServices" nocase
+    $wmi1  = "Get-WMIObject" nocase
+    $wmi2  = "Invoke-WmiMethod" nocase
+    $wmi3  = "wmiclass" nocase
+    $wmi4  = "Win32_Process" nocase
+    $wmi5  = "WMI" nocase
+    $wmi6  = "root\\CIMV2" nocase
+    $wmi7  = "ManagementObjectSearcher" nocase
+    $wmi8  = "ManagementObject" nocase
+    $wmi9  = "SWbemServices" nocase
     $wmi10 = "wmic.exe" nocase
     $wmi11 = "scrobj.dll" nocase  // used in WMI scriptlet execution (Squiblydoo technique)
 
   condition:
-    any of ($wmi*) 
+    any of ($wmi*)
 }
 
 rule Empire_Invoke_Mimikatz_Gen {
@@ -112,6 +112,55 @@ rule Detect_an_executable_file_or_a_system_command {
   condition:
     any of them
 }
+
+rule Detect_Code_Injection_Into_Another_Process {
+  meta:
+    description = "Обнаружение внедрения кода в другой процесс"
+
+  strings:
+    $createthread       = "CreateThread" ascii nocase wide
+    $createuserthread   = "CreateUserThread" ascii nocase wide
+    $virtualalloc       = "VirtualAlloc" ascii nocase wide
+    $virtualallocex     = "VirtualAllocEx" ascii nocase wide
+    $rtlmovememory      = "RtlMoveMemory" ascii nocase wide
+    $writeprocessmemory = "WriteProcessMemory" ascii nocase wide
+    $setcontextthread   = "SetContextThread" ascii nocase wide
+    $queueapcthread     = "QueueApcThread" ascii nocase wide
+    $writevirtualmemory = "WriteVirtualMemory" ascii nocase wide
+    $virtualprotect     = "VirtualProtect" ascii nocase wide
+
+  condition:
+    any of them
+}
+
+rule Potential_Obfuscation_Strings {
+  meta:
+    description = "Обнаружение возможной попытки обфускации строк"
+
+  strings:
+    $chr        = "Chr" ascii nocase wide fullword
+    $chrb       = "ChrB" ascii nocase wide
+    $chrw       = "ChrW" ascii nocase wide
+    $strreverse = "StrReverse" ascii nocase wide
+    $xor        = "Xor" ascii nocase wide fullword
+
+  condition:
+    any of them
+}
+
+rule Detect_Download_Files_From_Internet_Using_PowerShell {
+  meta:
+    description = "Обнаружение загрузки файлов из интернета через PowerShell"
+
+  strings:
+    $netwebclient   = "Net.WebClient" ascii nocase wide
+    $downloadfile   = "DownloadFile" ascii nocase wide
+    $downloadstring = "DownloadString" ascii nocase wide
+
+  condition:
+    any of them
+}
+
 
 rule Detect_Potential_Persistence_Startup {
   meta:

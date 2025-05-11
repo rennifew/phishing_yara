@@ -52,7 +52,6 @@ rule RTF_Header_Obfuscation {
     $bad_header
 }
 
-
 rule INDICATOR_RTF_EXPLOIT_CVE_2017_11882_1 {
   meta:
     description = "Обнаружение потенциальной эксплуатации уязвимости CVE-2017-11882"
@@ -83,40 +82,40 @@ rule INDICATOR_RTF_EXPLOIT_CVE_2017_11882_1 {
     uint32(0) == 0x74725c7b and 2 of ($s*) and $ole and 2 of ($obj*)
 }
 
-
 rule RTF_CVE_2018_0802_Exploit {
-    meta:
-        description = "Обнаружение эксплатации уязвимости CVE-2018-0802"
+  meta:
+    description = "Обнаружение эксплатации уязвимости CVE-2018-0802"
 
-    strings:
-        // RTF header
-        $rtf_header = "{\\rt"
+  strings:
+    // RTF header
+    $rtf_header = "{\\rt"
 
-        // Signature of Packager OLE object used in CVE-2018-0802 exploit (ActiveX name "Package")
-        $packager_obj = "5061636B61676500" wide ascii // "Package" in hex
+    // Signature of Packager OLE object used in CVE-2018-0802 exploit (ActiveX name "Package")
+    $packager_obj = "5061636B61676500" wide ascii  // "Package" in hex
 
-        // Typical OLE object header bytes preceding the Package object
-        $ole_obj_header = {01 05 00 00 02 00 00 00 0B 00 00 00 45 71 75 61 74 69 6F 6E} 
+    // Typical OLE object header bytes preceding the Package object
+    $ole_obj_header = { 01 05 00 00 02 00 00 00 0B 00 00 00 45 71 75 61 74 69 6F 6E }
 
-        // Objdata with Packager.dll trick to drop and execute SCT file
-        $objdata_marker = "objdata"
+    // Objdata with Packager.dll trick to drop and execute SCT file
+    $objdata_marker = "objdata"
 
-    condition:
-        // File starts with RTF header and contains Packager OLE object signature and objdata keyword
-        $rtf_header at 0 and
-        $packager_obj and
-        $ole_obj_header and
-        $objdata_marker
+  condition:
+    // File starts with RTF header and contains Packager OLE object signature and objdata keyword
+    $rtf_header at 0 and
+    $packager_obj and
+    $ole_obj_header and
+    $objdata_marker
 }
 
 rule RTF_Equation_Editor_CVE_2018_0798 {
   meta:
-    description   = "Обнаружение эксплуатации уязвимости CVE-2018-0798"
-  strings:
-    $S1 = {44 60 60 60 60 60 60 60 60 61 61 61 61 61 61 61 61 61 61 61 61 61 61 FB 0B}
-    $RTF= "{\rt"
-  condition:
-  $RTF at 0 and $S1 
-} 
+    description = "Обнаружение эксплуатации уязвимости CVE-2018-0798"
 
+  strings:
+    $S1  = { 44 60 60 60 60 60 60 60 60 61 61 61 61 61 61 61 61 61 61 61 61 61 61 FB 0B }
+    $RTF = "{\rt"
+
+  condition:
+    $RTF at 0 and $S1
+}
 

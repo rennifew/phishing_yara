@@ -28,3 +28,5 @@ def scan_ruleset_files(rule_dir) -> str:
         raise Exception("Правила пустые, скорее всего, что-то пошло не так!")
     else:
         return all_content
+
+

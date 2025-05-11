@@ -1,5 +1,3 @@
-
-
 rule VBA_Read_System_Environment_Variables {
   meta:
     description = ""
@@ -189,26 +187,6 @@ rule VBA_May_Run_Excel4_Macro_From_VBA {
     $execxlm
 }
 
-rule VBA_May_Inject_Code_Into_Another_Process {
-  meta:
-    description = "Обнаружение внедрения кода в другой процесс"
-
-  strings:
-    $createthread       = "CreateThread" ascii nocase wide
-    $createuserthread   = "CreateUserThread" ascii nocase wide
-    $virtualalloc       = "VirtualAlloc" ascii nocase wide
-    $virtualallocex     = "VirtualAllocEx" ascii nocase wide
-    $rtlmovememory      = "RtlMoveMemory" ascii nocase wide
-    $writeprocessmemory = "WriteProcessMemory" ascii nocase wide
-    $setcontextthread   = "SetContextThread" ascii nocase wide
-    $queueapcthread     = "QueueApcThread" ascii nocase wide
-    $writevirtualmemory = "WriteVirtualMemory" ascii nocase wide
-    $virtualprotect     = "VirtualProtect" ascii nocase wide
-
-  condition:
-    any of them
-}
-
 rule VBA_May_Run_Shellcode_In_Memory {
   meta:
     description = "Обнаружение запуска shellcode в памяти"
@@ -235,18 +213,7 @@ rule VBA_May_Download_Files_From_Internet {
     any of them
 }
 
-rule VBA_May_Download_Files_From_Internet_Using_PowerShell {
-  meta:
-    description = "Обнаружение загрузки файлов из интернета через PowerShell"
 
-  strings:
-    $netwebclient   = "Net.WebClient" ascii nocase wide
-    $downloadfile   = "DownloadFile" ascii nocase wide
-    $downloadstring = "DownloadString" ascii nocase wide
-
-  condition:
-    any of them
-}
 
 rule VBA_May_Control_Another_Application_By_Keystrokes {
   meta:
@@ -271,20 +238,6 @@ rule VBA_May_Obfuscate_Function_Calls {
     $callbyname
 }
 
-rule VBA_May_Obfuscate_Strings {
-  meta:
-    description = "Обнаружение возможной попытки обфускации строк"
-
-  strings:
-    $chr        = "Chr" ascii nocase wide
-    $chrb       = "ChrB" ascii nocase wide
-    $chrw       = "ChrW" ascii nocase wide
-    $strreverse = "StrReverse" ascii nocase wide
-    $xor        = "Xor" ascii nocase wide
-
-  condition:
-    any of them
-}
 
 rule VBA_May_Read_Write_Registry_Keys {
   meta:
@@ -324,17 +277,6 @@ rule VBA_May_Detect_Virtualization {
 
   condition:
     any of them
-}
-
-rule VBA_May_Detect_Sunbelt_Sandbox {
-  meta:
-    description = "Обнаружение Sunbelt Sandbox"
-
-  strings:
-    $fileexe = "C:\\file.exe" ascii nocase wide
-
-  condition:
-    $fileexe
 }
 
 rule VBA_May_Disable_VBA_Security {
@@ -379,44 +321,43 @@ rule VBA_May_Modify_Excel4_Formulas {
     $formulafill
 }
 
-
 rule VBA_Reverse_Shell_Attempt {
-    meta:
-        description = "Обнаружение попытки обратного соединения (reverse shell) в коде макроса"
+  meta:
+    description = "Обнаружение попытки обратного соединения (reverse shell) в коде макроса"
 
-    strings:
-        // Suspicious shell execution calls in VBA
-        $shell_call = /Shell\s*\(/ nocase
-        $wscript_shell = /CreateObject\s*\(\s*["']WScript\.Shell["']\s*\)/ nocase
+  strings:
+    // Suspicious shell execution calls in VBA
+    $shell_call    = /Shell\s*\(/ nocase
+    $wscript_shell = /CreateObject\s*\(\s*["']WScript\.Shell["']\s*\)/ nocase
 
-        // Common reverse shell commands or keywords often seen in VBA macros
-        $powershell = "powershell" nocase
-        $cmd = "cmd.exe" nocase
-        $nc = "nc.exe" nocase
-        $bash = "bash" nocase
-        $curl = "curl" nocase
-        $wget = "wget" nocase
-        $tcpclient = "New-Object Net.Sockets.TCPClient" nocase
-        $exec = "Exec" nocase
-        $redirect = "2>&1" nocase
+    // Common reverse shell commands or keywords often seen in VBA macros
+    $powershell = "powershell" nocase
+    $cmd        = "cmd.exe" nocase
+    $nc         = "nc.exe" nocase
+    $bash       = "bash" nocase
+    $curl       = "curl" nocase
+    $wget       = "wget" nocase
+    $tcpclient  = "New-Object Net.Sockets.TCPClient" nocase
+    $exec       = "Exec" nocase
+    $redirect   = "2>&1" nocase
 
-        // Patterns of suspicious IP:port or network connection strings (simple heuristic)
-        $ip_port = /(\d{1,3}\.){3}\d{1,3}:\d{2,5}/
+    // Patterns of suspicious IP:port or network connection strings (simple heuristic)
+    $ip_port = /(\d{1,3}\.){3}\d{1,3}:\d{2,5}/
 
-    condition:
-        // Must have shell execution call and one or more indicators of reverse shell commands or network activity
-        $shell_call and
-        (
-            $wscript_shell or
-            $powershell or
-            $cmd or
-            $nc or
-            $bash or
-            $curl or
-            $wget or
-            $tcpclient or
-            $exec or
-            $redirect or
-            $ip_port
-        )
+  condition:
+    // Must have shell execution call and one or more indicators of reverse shell commands or network activity
+    $shell_call and
+    (
+      $wscript_shell or
+      $powershell or
+      $cmd or
+      $nc or
+      $bash or
+      $curl or
+      $wget or
+      $tcpclient or
+      $exec or
+      $redirect or
+      $ip_port
+    )
 }

@@ -1,17 +1,16 @@
-from pathlib import Path
 import tempfile
+from pathlib import Path
+
 from python.tools.olevba import VBA_Parser, VBA_Scanner
 from python.tools.rtfobj import RtfObjParser
 
 
+
 def extract_vba_macros_to_tempfile(file_path: str) -> str | None:
-    """
-    Проверяет наличие VBA макросов в файле и, если есть, извлекает их в временный файл.
-    Возвращает путь к временному файлу с макросами или None, если макросов нет.
-    """
     vbaparser = VBA_Parser(file_path)
     try:
         if not vbaparser.detect_vba_macros():
+            print("NOT VBA. NONE RETURNED")
             return None
 
         with tempfile.NamedTemporaryFile(mode='w+', suffix='.txt', delete=False, dir='.',encoding='utf-8') as temp_file:
@@ -23,7 +22,6 @@ def extract_vba_macros_to_tempfile(file_path: str) -> str | None:
         print(f'Ошибка при экстракте vba макроса в файле{file_path}: {str(e)}')
     finally:
         vbaparser.close()
-
 
 def extract_from_rtf(file_path: Path):
     with open(file_path, 'rb') as f:
@@ -44,4 +42,3 @@ def extract_iocs_from_vba_file(vba_file_path: str):
         for kw_type, keyword, description in scan_results:
             if kw_type == "IOC":
                 iocs.append((keyword, description))
-
