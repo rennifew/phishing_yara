@@ -16,7 +16,7 @@ def process_file(file_path: Path, scanner: Scanner):
         if file_path.suffix == '.rtf':
             process_rtf_code(file_path, scanner)
 
-        elif file_path.suffix in ['.dot', '.docm', '.dotm', '.xls', '.xlt', '.xlsb', '.xlsm', '.xltm', '.xlam', '.pptm', '.potm', '.ppsm', '.ppam', '.ppa']:
+        elif file_path.suffix in ['.dot', '.docm', '.docx', '.doc', '.dotm', '.xls', '.xlt', '.xlsb', '.xlsm', '.xltm', '.xlam', '.pptm', '.potm', '.ppsm', '.ppam', '.ppa', '.ppt']:
             process_vba_code(file_path, scanner)
             
         else:

@@ -1,6 +1,6 @@
 rule Mail_with_attachment {
   meta:
-    description = "Обнаружение прикрепленного вложения к письму"
+    description = "Письмо содержит вложения"
 
   strings:
     $attachment_id = "X-Attachment-Id"
@@ -10,26 +10,9 @@ rule Mail_with_attachment {
     any of them
 }
 
-rule Mail_without_attachments {
-  meta:
-    description = "Письмо без вложений."
-
-  strings:
-    $eml_01        = "From:"
-    $eml_02        = "To:"
-    $eml_03        = "Subject:"
-    $attachment_id = "X-Attachment-Id"
-    $mime_type     = "Content-Type: multipart/mixed"
-
-  condition:
-    all of ($eml_*) and
-    not $attachment_id and
-    not $mime_type
-}
-
 rule Mail_with_urls: mail {
   meta:
-    description = "Обнаружение ссылок в письме."
+    description = "Письмо содержит ссылки"
 
   strings:
     $eml_01 = "From:"
@@ -40,6 +23,15 @@ rule Mail_with_urls: mail {
 
   condition:
     all of them
+}
+
+rule Mail_With_Hidden_Links {
+  meta:
+    description = "Письмо содержит скрытые ссылки"
+  strings:
+    $hidden_http = "<http"
+  condition:
+    Mail_with_urls and $hidden_http
 }
 
 rule Out_Mail_Detected {
@@ -84,3 +76,4 @@ rule Mail_Contains_Social_Engineering {
   condition:
     any of them
 }
+
