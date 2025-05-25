@@ -10,7 +10,7 @@ if __name__ == '__main__':
 
     scanner = init()
 
-    file_type = endless_input('Выберите тип файлов для сканирования:', 'ppt', 'pdf', 'rtf', 'vba', 'doc','eml', 'lnk', 'other')
+    file_type = endless_input('Выберите тип файлов для сканирования:', 'ppt', 'pdf', 'rtf', 'frameworks', 'doc','eml', 'lnk', 'other')
     malware_dir_path = Path(f"{malware_abs_path}/{file_type}")
 
     scan_directory(malware_dir_path, scanner=scanner)
