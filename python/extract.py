@@ -10,7 +10,7 @@ def extract_vba_macros_to_tempfile(file_path: str) -> str | None:
     vbaparser = VBA_Parser(file_path)
     try:
         if not vbaparser.detect_vba_macros():
-            return None
+            return None   
 
         with tempfile.NamedTemporaryFile(mode='w+', suffix='.txt', delete=False, dir='.',encoding='utf-8') as temp_file:
             for _, _, _, vba_code in vbaparser.extract_macros():

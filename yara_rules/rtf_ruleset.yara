@@ -1,7 +1,7 @@
 import "pe"
 import "time"
 
-rule RTF_Objupdate {
+rule Detect_RTF_objupdate {
   meta:
     description = "Обнаруживает RTF-файлы с помощью директивы objupdate, которая часто встречалась в атаках"
 
@@ -13,7 +13,7 @@ rule RTF_Objupdate {
     $magic1 in (0..30) and $upd and filesize > 50KB and filesize < 500KB
 }
 
-rule INDICATOR_RTF_MalVer_Objects {
+rule Detect_RTF_Malicious_objectest {
   meta:
     description = "Обнаруживает документы в формате RTF нестандартной версии и внедряет один из объектов, которые чаще всего встречаются в документах с эксплойтами"
 
@@ -30,9 +30,9 @@ rule INDICATOR_RTF_MalVer_Objects {
     uint32(0) == 0x74725c7b and ((not uint8(4) == 0x66 or not uint8(5) == 0x31 or not uint8(6) == 0x5c) and 1 of ($obj*))
 }
 
-rule RTF_Anti_Analysis_Header {
+rule Detect_RTF_Anti_Analysis_Header {
   meta:
-    description = "Обнаружение строк найленных в вредоносных RTF-документов"
+    description = "Обнаружение строк найденных в вредоносных RTF-документов, которые используют техники анти-анализа"
 
   strings:
     $r1 = /[\x0d\x0aa-f0-9\s]{64}(\{\\object\}|\\bin)[\x0d\x0aa-f0-9\s]{64}/ nocase
@@ -41,7 +41,7 @@ rule RTF_Anti_Analysis_Header {
     uint32(0) == 0x74725C7B and (not uint8(4) == 0x66 or $r1)
 }
 
-rule RTF_Header_Obfuscation {
+rule Detect_RTF_Header_Obfuscation {
   meta:
     description = "Обнаружение обфускации заголовков RTF файла для избержания детектирования вредоносной нагрузки"
 
@@ -52,7 +52,7 @@ rule RTF_Header_Obfuscation {
     $bad_header
 }
 
-rule INDICATOR_RTF_EXPLOIT_CVE_2017_11882_1 {
+rule Detect_RTF_CVE_2017_11882_1 {
   meta:
     description = "Обнаружение потенциальной эксплуатации уязвимости CVE-2017-11882"
 
@@ -65,11 +65,6 @@ rule INDICATOR_RTF_EXPLOIT_CVE_2017_11882_1 {
     $s3   = "\\bin0" ascii nocase
     // OLE Signature
     $ole  = { (64 | 44) [0-20] 30 [0-20] (63 | 43) [0-20] (66 | 46) [0-20] 31 [0-20] 31 [0-20] (65 | 45) [0-20] 30 [0-20] (61 | 41) [0-20] 31 [0-20] (62 | 42) [0-20] 31 [0-20] 31 [0-20] (61 | 41) }
-    //$ole1 = "d0cf11e0a1b11ae1" ascii nocase
-    //$ole2 = { 6430 [0-1] 6366 [0-1] 3131 [0-1] 6530 [0-1] 6131 [0-1] 6231 [0-1] 3161 }
-    //$ole3 = { 4430 [0-1] 4346 [0-1] 3131 [0-1] 4530 [0-1] 4131 [0-1] 4231 [0-1] 3141 }
-    //$ole4 = { 64[0-1]30[0-1]63[0-1]66[0-1]31[0-1]31[0-1]65[0-1]30[0-1]61[0-1]31[0-1]62[0-1]31[0-1]31[0-1]61 }
-    //$ole5 = { 44[0-1]30[0-1]43[0-1]46[0-1]31[0-1]31[0-1]45[0-1]30[0-1]41[0-1]31[0-1]42[0-1]31[0-1]31[0-1]41 }
     // Embedded Objects
     $obj1 = "\\objhtml" ascii
     $obj2 = "\\objdata" ascii
@@ -82,7 +77,7 @@ rule INDICATOR_RTF_EXPLOIT_CVE_2017_11882_1 {
     uint32(0) == 0x74725c7b and 2 of ($s*) and $ole and 2 of ($obj*)
 }
 
-rule RTF_CVE_2018_0802_Exploit {
+rule Detect_RTF_CVE_2018_0802 {
   meta:
     description = "Обнаружение эксплатации уязвимости CVE-2018-0802"
 
@@ -107,7 +102,7 @@ rule RTF_CVE_2018_0802_Exploit {
     $objdata_marker
 }
 
-rule RTF_Equation_Editor_CVE_2018_0798 {
+rule Detect_RTF_CVE_2018_0798 {
   meta:
     description = "Обнаружение эксплуатации уязвимости CVE-2018-0798"
 
