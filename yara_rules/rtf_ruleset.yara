@@ -3,7 +3,7 @@ import "time"
 
 rule Detect_RTF_objupdate {
   meta:
-    description = "Обнаруживает RTF-файлы с помощью директивы objupdate, которая часто встречалась в атаках"
+    description = "Обнаруживает RTF-файлы с директивой objupdate, которая часто встречалась в атаках"
 
   strings:
     $magic1 = { 7b 5c 72 74 (7B | 66) }  // {\rtf{ or {\rt{
