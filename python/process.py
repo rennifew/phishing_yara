@@ -42,7 +42,6 @@ def process_vba_code(file_path: Path, scanner: Scanner):
     if vba_temp_path:
         # Сканируем макросы
         iocs = extract_iocs_from_vba_file(vba_temp_path)
-        print("IOCS: ", iocs)
         vba_results = scanner.scan_file(str(vba_temp_path))
         os.remove(vba_temp_path)
         print_matched_rules(vba_results, file_path,
