@@ -26,14 +26,11 @@ def process_file(file_path: Path, scanner: Scanner):
         print(f'Ошибка при сканировании {file_path}: {str(e)}')
 
 
-
 def process_rtf_code(file_path: Path, scanner: Scanner):
     results_from_rtf = extract_from_rtf(file_path)
     if results_from_rtf:
         rtf_results = scanner.scan(results_from_rtf)
-        print_matched_rules(rtf_results, file_path, tabs=1, text='Найдено совпадение внутри макроса RTF-файла:')
-    else:
-        print('\n\t'+f'Совпадений в макросах в файле {file_path.resolve()} не ОБНАРУЖЕНО')
+        print_matched_rules(rtf_results, file_path, tabs=1, text='Найдено совпадение внутри встреоенного OLE-файоа:')
 
 
 def process_vba_code(file_path: Path, scanner: Scanner):
