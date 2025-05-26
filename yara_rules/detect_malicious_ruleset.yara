@@ -3,7 +3,6 @@ rule Detect_WMI_Usage {
     description = "Обнаружение файлов или скриптов, которые содержат строки, указываюшщие на использование Windows Management Instrumentation (WMI)"
 
   strings:
-    // Common WMI-related keywords in scripts or binaries
     $wmi1  = "Get-WMIObject" nocase
     $wmi2  = "Invoke-WmiMethod" nocase
     $wmi3  = "wmiclass" nocase
@@ -14,7 +13,7 @@ rule Detect_WMI_Usage {
     $wmi8  = "ManagementObject" nocase
     $wmi9  = "SWbemServices" nocase
     $wmi10 = "wmic.exe" nocase
-    $wmi11 = "scrobj.dll" nocase  // used in WMI scriptlet execution (Squiblydoo technique)
+    $wmi11 = "scrobj.dll" nocase
 
   condition:
     any of ($wmi*)
@@ -167,11 +166,47 @@ rule Detect_Potential_Persistence_Startup {
     description = "Обнаружение попытки закрепления в папке автозагрузки Windows"
 
   strings:
-    $ = "AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup" ascii nocase wide
+    $ = "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup" ascii nocase wide
     $ = "Start Menu\\Programs\\Startup" ascii nocase wide
 
   condition:
     any of them
 }
 
-// TODO: Detect other persisting techniques
+
+rule Detect_Potential_Persistence_Run_Registry {
+  meta:
+    description = "Обнаружение попытки закрепления через реестр Run/RunOnce"
+
+  strings:
+    $ = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run" ascii nocase wide
+    $ = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce" ascii nocase wide
+
+  condition:
+    any of them
+}
+
+rule Detect_Potential_Persistence_ScheduledTasks {
+  meta:
+    description = "Обнаружение попытки закрепления через планировщик заданий"
+
+  strings:
+    $ = "schtasks /create" ascii nocase wide
+    $ = "schtasks.exe /create" ascii nocase wide
+
+  condition:
+    any of them
+}
+
+rule Detect_Potential_Persistence_WindowsService {
+  meta:
+    description = "Обнаружение попытки закрепления через сервисы Windows"
+
+  strings:
+    $ = "sc create" ascii nocase wide
+    $ = "sc.exe create" ascii nocase wide
+    $ = "New-Service" ascii nocase wide // PowerShell
+
+  condition:
+    any of them
+}
