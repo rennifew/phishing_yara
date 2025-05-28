@@ -19,6 +19,8 @@ def process_file(file_path: Path, scanner: Scanner):
         elif file_path.suffix in ['.dot', '.docm', '.docx', '.doc', '.dotm', '.xls', '.xlt', '.xlsb', '.xlsm', '.xltm', '.xlam', '.pptm', '.potm', '.ppsm', '.ppam', '.ppa', '.ppt']:
             process_vba_code(file_path, scanner)
             
+        elif file_path.suffix == '.eml':
+            process_eml_file(file_path, scanner)
         else:
             pass
 
@@ -43,3 +45,10 @@ def process_vba_code(file_path: Path, scanner: Scanner):
         os.remove(vba_temp_path)
         print_matched_rules(vba_results, file_path,
                             text='Обнаружены макросы в файле:', tabs=1, iocs=iocs)
+
+def process_eml_file(eml_filepath: Path, scanner: Scanner):
+    attach_paths = extract_attachments(eml_filepath)
+    for file in attach_paths:
+        print("Проверка вложения...")
+        process_file(file, scanner=scanner)
+        # os.remove(file)

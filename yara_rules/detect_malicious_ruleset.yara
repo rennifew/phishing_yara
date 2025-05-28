@@ -93,7 +93,6 @@ rule Detect_an_executable_file_or_a_system_command {
     description = "Обнаружение запуска исполняемых файлов или системных команд"
 
   strings:
-    $ = "Shell" ascii nocase wide
     $ = "vbNormal" ascii nocase wide
     $ = "vbNormalFocus" ascii nocase wide
     $ = "vbHide" ascii nocase wide

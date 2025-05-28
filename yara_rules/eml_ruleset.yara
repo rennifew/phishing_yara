@@ -46,8 +46,9 @@ rule Out_Mail_Detected {
     description = "Письмо пришло от внешнего почтового сервера."
   strings:
     $vneshn_pochta = "=D0=92=D0=BD=D0=B5=D1=88=D0=BD=D1=8F=D1=8F =D0=BF=D0=BE=D1=87=D1=82=D0=B0" // Внешняя почта 
+    $vnesh = "=D0=92=D0=9D=D0=95=D0=A8=D0=9D=D0=AF=D0=AF =D0=9F=D0=9E=D0=A7=D0=A2=D0=90" // ВНЕШНЯЯ ПОЧТА
   condition:
-    IS_Mail and $vneshn_pochta
+    IS_Mail and any of them
 }
 
 rule Mail_Contains_Social_Engineering {
@@ -103,6 +104,8 @@ rule Suspicious_Attachment_Extensions {
     $hta = ".hta" nocase
     $com = ".com" nocase
     $pif = ".pif" nocase
+    $zip = ".zip" nocase
+    $7z = ".7z" nocase
 
   condition:
     IS_Mail and Mail_with_attachment and any of them
