@@ -9,7 +9,7 @@ rule Contains_VBA_macro_code {
 
     $97str1 = "_VBA_PROJECT_CUR" wide
     $97str2 = "VBAProject" wide
-    $97str3 = { 41 74 74 72 69 62 75 74 00 65 20 56 42 5F }  // Attribute VB_
+    $97str3 = { 41 74 74 72 69 62 75 74 00 65 20 56 42 5F }
 
     $xmlstr1 = "vbaProject.bin"
     $xmlstr2 = "vbaData.xml"
@@ -35,8 +35,8 @@ rule Contains_hidden_PE_File_inside_a_sequence_of_numbers {
     filetype    = "Разархивированный VBA-макрос"
 
   strings:
-    $a = "= Array("  // Array of bytes
-    $b = "77, 90,"  // MZ
+    $a = "= Array("
+    $b = "77, 90,"
     $c = "33, 84, 104, 105, 115, 32, 112, 114, 111, 103, 114, 97, 109, 32, 99, 97, 110, 110, 111, 116, 32, 98, 101, 32, 114, 117, 110, 32, 105, 110, 32, 68, 79, 83, 32, 109, 111, 100, 101, 46,"  // !This program cannot be run in DOS mode.
 
   condition:
@@ -371,11 +371,8 @@ rule VBA_Reverse_Shell_Attempt {
     description = "Обнаружение попытки обратного соединения (reverse shell) в коде макроса"
 
   strings:
-    // Suspicious shell execution calls in VBA
     $shell_call    = /Shell\s*\(/ nocase
     $wscript_shell = /CreateObject\s*\(\s*["']WScript\.Shell["']\s*\)/ nocase
-
-    // Common reverse shell commands or keywords often seen in VBA macros
     $powershell = "powershell" nocase
     $cmd        = "cmd.exe" nocase
     $nc         = "nc.exe" nocase
@@ -385,12 +382,9 @@ rule VBA_Reverse_Shell_Attempt {
     $tcpclient  = "New-Object Net.Sockets.TCPClient" nocase
     $exec       = "Exec" nocase
     $redirect   = "2>&1" nocase
-
-    // Patterns of suspicious IP:port or network connection strings (simple heuristic)
     $ip_port = /(\d{1,3}\.){3}\d{1,3}:\d{2,5}/
 
   condition:
-    // Must have shell execution call and one or more indicators of reverse shell commands or network activity
     $shell_call and
     (
       $wscript_shell or

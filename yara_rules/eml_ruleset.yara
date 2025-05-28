@@ -1,3 +1,14 @@
+private rule IS_Mail {
+  meta:
+    description = "Файл является письмом EML"
+  strings:
+    $eml_01 = "From:"
+    $eml_02 = "To:"
+    $eml_03 = "Subject:"
+  condition:
+    all of them
+}
+
 rule Mail_with_attachment {
   meta:
     description = "Письмо содержит вложения"
@@ -7,7 +18,7 @@ rule Mail_with_attachment {
     $attachment = "attachment"
 
   condition:
-    any of them
+    IS_Mail and any of them
 }
 
 rule Mail_with_urls: mail {
@@ -15,14 +26,10 @@ rule Mail_with_urls: mail {
     description = "Письмо содержит ссылки"
 
   strings:
-    $eml_01 = "From:"
-    $eml_02 = "To:"
-    $eml_03 = "Subject:"
-
     $url_regex = /https?:\/\/([\w\.-]+)([\/\w \.-]*)/
 
   condition:
-    all of them
+    IS_Mail and $url_regex
 }
 
 rule Mail_With_Hidden_Links {
@@ -31,7 +38,7 @@ rule Mail_With_Hidden_Links {
   strings:
     $hidden_http = "<http"
   condition:
-    Mail_with_urls and $hidden_http
+    IS_Mail and Mail_with_urls and $hidden_http
 }
 
 rule Out_Mail_Detected {
@@ -40,7 +47,7 @@ rule Out_Mail_Detected {
   strings:
     $vneshn_pochta = "=D0=92=D0=BD=D0=B5=D1=88=D0=BD=D1=8F=D1=8F =D0=BF=D0=BE=D1=87=D1=82=D0=B0" // Внешняя почта 
   condition:
-    $vneshn_pochta
+    IS_Mail and $vneshn_pochta
 }
 
 rule Mail_Contains_Social_Engineering {
@@ -48,8 +55,8 @@ rule Mail_Contains_Social_Engineering {
     description = "Письмо содержит популярные фразы, которые принуждают получателя к действию."
   strings:
     $ = "=D0=A1=D1=80=D0=BE=D1=87=D0=BD=" // Срочно 
-    $ = "=D1=81=D1=80=D0=BE=D1=87=D0=BD=D0=BE" // Срочно 
-    $ = "=D0=91=D1=8B=D1=81=D1=82=D1=80=D0=B5=D0=B5" // быстрее 
+    $ = "=D1=81=D1=80=D0=BE=D1=87=D0=BD=D0=BE" // cрочно 
+    $ = "=D0=91=D1=8B=D1=81=D1=82=D1=80=D0=B5=D0=B5" // Быстрее 
     $ = "=D0=B1=D1=8B=D1=81=D1=82=D1=80=D0=B5=D0=B5" // быстрее 
     $ = "=D1=80=D0=BE=D0=BA =D0=B4=D0=B5=D0=B9=D1=81=D1=82=D0=B2=D0=B8=D1=8F" // Срок действия 
     $ = "=D0=A2=D1=80=D0=B5=D0=B1=D1=83=D0=B5=D1=82=D1=81=D1=8F =D0=B2=D0=B0=D1=88=D0=B5 =D1=80=D0=B5=D1=88=D0=B5=D0=BD=D0=B8=D0=B5" // Требуется ваше решение 
@@ -74,6 +81,29 @@ rule Mail_Contains_Social_Engineering {
     $ = "=D0=9F=D0=BE=D0=B2=D1=82=D0=BE=D1=80=D0=B8=D1=82=D1=8C" // Повторить
     $ = "=D0=9F=D0=BE=D0=B2=D1=82=D0=BE=D1=80=D0=B8=D1=82=D0=B5" // Повторите
   condition:
-    any of them
+    IS_Mail and any of them
 }
 
+rule Suspicious_Attachment_Extensions {
+  meta:
+    description = "Обнаружение вложения с необычным и потенциально опасным расширением"
+
+  strings:
+    $rdp = ".rdp" nocase
+    $lnk = ".lnk" nocase
+    $exe = ".exe" nocase
+    $bat = ".bat" nocase
+    $cmd = ".cmd" nocase
+    $ps1 = ".ps1" nocase
+    $scr = ".scr" nocase
+    $vbs = ".vbs" nocase
+    $js = ".js" nocase
+    $jar = ".jar" nocase
+    $msi = ".msi" nocase
+    $hta = ".hta" nocase
+    $com = ".com" nocase
+    $pif = ".pif" nocase
+
+  condition:
+    IS_Mail and Mail_with_attachment and any of them
+}

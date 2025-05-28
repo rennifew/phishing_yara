@@ -1,11 +1,6 @@
-//LNK header 4c 00 00 00 01 14 02 00  00 00 00 00 c0 00 00 00 00 00 00 46 ref: https://github.com/file/file/blob/884982aa3468a05a7756ba1a46e4fe79c399ba6b/magic/Magdir/windows
-import "math"
-
 private rule LNK_File {
   meta:
     description = "Файл является ярлыком (LNK)"
-    author      = "aminevvm"
-    category    = "INFO"
 
   strings:
     $lnk_header = { 4c 00 00 00 01 14 02 00 00 00 00 00 c0 00 00 00 00 00 00 46 }
@@ -225,14 +220,6 @@ rule Large_filesize_LNK {
 
   condition:
     LNK_File and filesize > 100KB
-}
-
-rule High_Entropy_LNK {
-  meta:
-    description = "Определяет файл ярлыка (LNK) с энтропией, равной или превышающей 6.5. Большинство легитимных файлов LNK имеют низкую энтропию, ниже 6."
-
-  condition:
-    LNK_File and math.entropy(0, filesize) >= 6.5
 }
 
 rule CDN_in_LNK {

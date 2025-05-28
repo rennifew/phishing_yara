@@ -6,7 +6,7 @@ rule Detect_RTF_objupdate {
     description = "Обнаруживает RTF-файлы с директивой objupdate, которая часто встречалась в атаках"
 
   strings:
-    $magic1 = { 7b 5c 72 74 (7B | 66) }  // {\rtf{ or {\rt{
+    $magic1 = { 7b 5c 72 74 (7B | 66) } 
     $upd    = "\\objupdate" nocase
 
   condition:
@@ -57,15 +57,10 @@ rule Detect_RTF_CVE_2017_11882_1 {
     description = "Обнаружение потенциальной эксплуатации уязвимости CVE-2017-11882"
 
   strings:
-    // 0002CE02-0000-0000-C000-000000000046: Equation <> CVE-2017-11882 or CVE-2018-0802
     $s1   = { 32 [0-30] (43 | 63) [0-30] (45 | 65) [0-30] 30 [0-30] 32 [0-30] 30 [0-30] 30 [0-30] 30 [0-30] 30 [0-30] 30 [0-30] 30 [0-30] 30 [0-30] 30 [0-30] (43 | 63) [0-30] 30 [0-30] 30 [0-30] 30 [0-30] 30 [0-30] 30 [0-30] 30 [0-30] 30 [0-30] 30 [0-30] 30 [0-30] 30 [0-30] 30 [0-30] 30 [0-30] 30 [0-30] 34 [0-30] 36 }
-    // Root Entry
     $s2   = "52006f006f007400200045006e00740072007900" ascii nocase
-    // bin0
     $s3   = "\\bin0" ascii nocase
-    // OLE Signature
     $ole  = { (64 | 44) [0-20] 30 [0-20] (63 | 43) [0-20] (66 | 46) [0-20] 31 [0-20] 31 [0-20] (65 | 45) [0-20] 30 [0-20] (61 | 41) [0-20] 31 [0-20] (62 | 42) [0-20] 31 [0-20] 31 [0-20] (61 | 41) }
-    // Embedded Objects
     $obj1 = "\\objhtml" ascii
     $obj2 = "\\objdata" ascii
     $obj3 = "\\objupdate" ascii
@@ -82,20 +77,12 @@ rule Detect_RTF_CVE_2018_0802 {
     description = "Обнаружение эксплатации уязвимости CVE-2018-0802"
 
   strings:
-    // RTF header
     $rtf_header = "{\\rt"
-
-    // Signature of Packager OLE object used in CVE-2018-0802 exploit (ActiveX name "Package")
-    $packager_obj = "5061636B61676500" wide ascii  // "Package" in hex
-
-    // Typical OLE object header bytes preceding the Package object
+    $packager_obj = "5061636B61676500" wide ascii 
     $ole_obj_header = { 01 05 00 00 02 00 00 00 0B 00 00 00 45 71 75 61 74 69 6F 6E }
-
-    // Objdata with Packager.dll trick to drop and execute SCT file
     $objdata_marker = "objdata"
 
   condition:
-    // File starts with RTF header and contains Packager OLE object signature and objdata keyword
     $rtf_header at 0 and
     $packager_obj and
     $ole_obj_header and
@@ -113,4 +100,3 @@ rule Detect_RTF_CVE_2018_0798 {
   condition:
     $RTF at 0 and $S1
 }
-
