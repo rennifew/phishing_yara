@@ -21,6 +21,33 @@ rule Mail_with_attachment {
     IS_Mail and any of them
 }
 
+rule Suspicious_Attachment_Extensions {
+  meta:
+    description = "Обнаружение вложения с необычным и потенциально опасным расширением"
+
+  strings:
+    $rdp = ".rdp" nocase
+    $lnk = ".lnk" nocase
+    $exe = ".exe" nocase
+    $bat = ".bat" nocase
+    $cmd = ".cmd" nocase
+    $ps1 = ".ps1" nocase
+    $scr = ".scr" nocase
+    $vbs = ".vbs" nocase
+    $js = ".js" nocase
+    $jar = ".jar" nocase
+    $msi = ".msi" nocase
+    $hta = ".hta" nocase
+    $com = ".com" nocase
+    $pif = ".pif" nocase
+    $zip = ".zip" nocase
+    $7z = ".7z" nocase
+
+  condition:
+    IS_Mail and Mail_with_attachment and any of them
+}
+
+
 rule Mail_with_urls: mail {
   meta:
     description = "Письмо содержит ссылки"
@@ -85,28 +112,3 @@ rule Mail_Contains_Social_Engineering {
     IS_Mail and any of them
 }
 
-rule Suspicious_Attachment_Extensions {
-  meta:
-    description = "Обнаружение вложения с необычным и потенциально опасным расширением"
-
-  strings:
-    $rdp = ".rdp" nocase
-    $lnk = ".lnk" nocase
-    $exe = ".exe" nocase
-    $bat = ".bat" nocase
-    $cmd = ".cmd" nocase
-    $ps1 = ".ps1" nocase
-    $scr = ".scr" nocase
-    $vbs = ".vbs" nocase
-    $js = ".js" nocase
-    $jar = ".jar" nocase
-    $msi = ".msi" nocase
-    $hta = ".hta" nocase
-    $com = ".com" nocase
-    $pif = ".pif" nocase
-    $zip = ".zip" nocase
-    $7z = ".7z" nocase
-
-  condition:
-    IS_Mail and Mail_with_attachment and any of them
-}

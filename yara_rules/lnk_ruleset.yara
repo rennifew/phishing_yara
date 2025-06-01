@@ -84,7 +84,7 @@ rule EXE_in_LNK {
 
 rule Archive_in_LNK {
   meta:
-    description = "Обнаружены архива (compressed) в файле ярлыка (LNK)."
+    description = "Обнаружены артефакты архива в файле ярлыка (LNK)."
 
   strings:
     $ = ".7z" ascii wide nocase
