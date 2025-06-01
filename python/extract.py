@@ -3,7 +3,7 @@ import tempfile
 from email import policy, message_from_file
 
 from pathlib import Path
-from python.helpers import sanitize_foldername, save_attachment
+from python.helpers import save_attachment
 from python.tools.olevba import VBA_Parser, VBA_Scanner
 from python.tools.rtfobj import RtfObjParser
 

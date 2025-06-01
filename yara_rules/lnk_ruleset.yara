@@ -140,7 +140,7 @@ rule Compilation_in_LNK {
 
 rule Download_in_LNK {
   meta:
-    description = "Обнаружены артефакты процесса скачивания в файле ярлыка (LNK)."
+    description = "Обнаружены артефакты процесса скачивания с внешних ресурсов в файле ярлыка (LNK)."
 
   strings:
     $ = "bitsadmin" ascii wide nocase
@@ -224,7 +224,7 @@ rule Large_filesize_LNK {
 
 rule CDN_in_LNK {
   meta:
-    description = "Определяет домен CDN (сеть доставки контента) в файле ярлыка (LNK)"
+    description = "Обнаружение домена CDN (сеть доставки контента) в файле ярлыка (LNK)"
 
   strings:
     $ = "cdn." ascii wide nocase

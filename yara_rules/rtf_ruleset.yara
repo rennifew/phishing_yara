@@ -1,6 +1,3 @@
-import "pe"
-import "time"
-
 rule Detect_RTF_objupdate {
   meta:
     description = "Обнаруживает RTF-файлы с директивой objupdate, которая часто встречалась в атаках"
@@ -74,7 +71,7 @@ rule Detect_RTF_CVE_2017_11882_1 {
 
 rule Detect_RTF_CVE_2018_0802 {
   meta:
-    description = "Обнаружение эксплатации уязвимости CVE-2018-0802"
+    description = "Обнаружение эксплуатации уязвимости CVE-2018-0802"
 
   strings:
     $rtf_header = "{\\rt"
