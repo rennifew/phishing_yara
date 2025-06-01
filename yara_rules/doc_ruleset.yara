@@ -45,7 +45,7 @@ rule Contains_hidden_PE_File_inside_a_sequence_of_numbers {
 
 rule VBA_Read_System_Environment_Variables {
   meta:
-    description = ""
+    description = "Обнаружение разведки переменных окружения"
 
   strings:
     $ = "Environ" ascii nocase wide
@@ -312,7 +312,7 @@ rule VBA_May_Read_Registry_Keys {
 
 rule VBA_May_Detect_Virtualization {
   meta:
-    description = "Обнаружение признаков виртуализации"
+    description = "Обнаружение равзедки признаков виртуализации"
 
   strings:
     $disk_enum = "SYSTEM\\ControlSet001\\Services\\Disk\\Enum" ascii nocase wide
@@ -400,4 +400,3 @@ rule VBA_Reverse_Shell_Attempt {
       $ip_port
     )
 }
-

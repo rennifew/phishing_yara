@@ -1,6 +1,6 @@
 rule Detect_WMI_Usage {
   meta:
-    description = "Обнаружение файлов или скриптов, которые содержат строки, указываюшщие на использование Windows Management Instrumentation (WMI)"
+    description = "Обнаружение использование Windows Management Instrumentation (WMI)"
 
   strings:
     $wmi1  = "Get-WMIObject" nocase
