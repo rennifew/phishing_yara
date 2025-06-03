@@ -144,7 +144,6 @@ rule Potential_Obfuscation_Strings {
     $chrw       = "ChrW" ascii nocase wide
     $strreverse = "StrReverse" ascii nocase wide
     $xor        = "Xor" ascii nocase wide fullword
-    $sign       = "^" ascii nocase wide fullword
 
   condition:
     any of them

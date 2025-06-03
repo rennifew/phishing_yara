@@ -23,8 +23,11 @@ def print_matched_rules(results: ScanResults, file_path: Path, text: str, tabs:i
     if results and results.matching_rules:
         print(f"\n{'\t'*tabs}{text} {file_path.resolve()}")
         print(f"{'\t'*tabs}🔍 Сработавшие правила:")
+
         for rule in results.matching_rules:
             print(f"{'\t'*tabs}💹 {rule.identifier} - {rule.metadata[0][1]}")
+
+        print(f"Правил сработало: {len(results.matching_rules)}")
 
         if iocs:
             print(f"\n{'\t'*tabs}IOC's:")
@@ -33,6 +36,18 @@ def print_matched_rules(results: ScanResults, file_path: Path, text: str, tabs:i
     else:
         print('\n'+f'Совпадений в файле {file_path.resolve()} не ОБНАРУЖЕНО')
 
+def print_results(all_files_count: int, rules_count:int, elapsed_time: int):
+    length = 32
+    print('\n'*2)
+    print('='*length)
+    print(f"Файлов просканировано: {all_files_count}")
+    print('-'*length)
+    print(f"Правил сработало: {rules_count}")
+    print('-'*length)
+    print(f"Время выполнения: {round(elapsed_time, 2)} секунд")
+    print('='*length)
+    print('\n'*5)
+    
 
 
 def save_attachment(file: Path, payload: bytes) -> None:

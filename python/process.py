@@ -2,14 +2,17 @@ import os
 
 from yara_x import Scanner
 from pathlib import Path
-
 from python.helpers import print_matched_rules
 from python.extract import *
+
+
+rules_matched_count = [0]
 
 
 def process_file(file_path: Path, scanner: Scanner):
     try:
         results = scanner.scan_file(file_path)
+        rules_matched_count[0] += len(results.matching_rules)
         print_matched_rules(results, file_path,
                             text='Найдено совпадение в файле:')
         
@@ -32,6 +35,7 @@ def process_rtf_code(file_path: Path, scanner: Scanner):
     results_from_rtf = extract_from_rtf(file_path)
     if results_from_rtf:
         rtf_results = scanner.scan(results_from_rtf)
+        rules_matched_count[0] += len(rtf_results.matching_rules)
         print_matched_rules(rtf_results, file_path, tabs=1, text='Найдено совпадение внутри встреоенного OLE-файоа:')
 
 
@@ -42,6 +46,7 @@ def process_vba_code(file_path: Path, scanner: Scanner):
         # Сканируем макросы
         iocs = extract_iocs_from_vba_file(vba_temp_path)
         vba_results = scanner.scan_file(str(vba_temp_path))
+        rules_matched_count[0] += len(vba_results.matching_rules)
         os.remove(vba_temp_path)
         print_matched_rules(vba_results, file_path,
                             text='Обнаружены макросы в файле:', tabs=1, iocs=iocs)
@@ -51,4 +56,4 @@ def process_eml_file(eml_filepath: Path, scanner: Scanner):
     for file in attach_paths:
         print("Проверка вложения...")
         process_file(file, scanner=scanner)
-        # os.remove(file)
+        os.remove(file)
