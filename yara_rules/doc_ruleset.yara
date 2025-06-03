@@ -317,7 +317,6 @@ rule VBA_May_Detect_Virtualization {
   strings:
     $disk_enum = "SYSTEM\\ControlSet001\\Services\\Disk\\Enum" ascii nocase wide
     $virtual   = "VIRTUAL" ascii nocase wide
-    $vmware    = "VMWARE" ascii nocase wide
     $vbox      = "VBOX" ascii nocase wide
 
   condition:

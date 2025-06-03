@@ -28,7 +28,6 @@ rule PS_in_LNK {
   strings:
     $ = ".ps1" ascii wide nocase
     $ = "powershell" ascii wide nocase
-    $ = "cmd" ascii wide nocase
     $ = "invoke" ascii wide nocase
     $ = "[Convert]" ascii wide nocase
     $ = "FromBase" ascii wide nocase
@@ -231,6 +230,7 @@ rule CDN_in_LNK {
     $ = "githubusercontent" ascii wide nocase
     $ = "googleusercontent" ascii wide nocase
     $ = "cloudfront" ascii wide nocase
+    $ = "pastebin" ascii wide nocase
     $ = "amazonaws" ascii wide nocase
     $ = "akamai" ascii wide nocase
     $ = "cdn77" ascii wide nocase

@@ -3,17 +3,17 @@ rule Detect_WMI_Usage {
     description = "Обнаружение использование Windows Management Instrumentation (WMI)"
 
   strings:
-    $wmi1  = "Get-WMIObject" nocase
-    $wmi2  = "Invoke-WmiMethod" nocase
-    $wmi3  = "wmiclass" nocase
-    $wmi4  = "Win32_Process" nocase
-    $wmi5  = "WMI" nocase
-    $wmi6  = "root\\CIMV2" nocase
-    $wmi7  = "ManagementObjectSearcher" nocase
-    $wmi8  = "ManagementObject" nocase
-    $wmi9  = "SWbemServices" nocase
-    $wmi10 = "wmic.exe" nocase
-    $wmi11 = "scrobj.dll" nocase
+    $wmi1  = "Get-WMIObject" nocase ascii
+    $wmi2  = "Invoke-WmiMethod" nocase ascii
+    $wmi3  = "wmiclass" nocase ascii
+    $wmi4  = "Win32_Process" nocase ascii
+    $wmi5  = "WMI" nocase ascii
+    $wmi6  = "root\\CIMV2" nocase ascii
+    $wmi7  = "ManagementObjectSearcher" nocase ascii
+    $wmi8  = "ManagementObject" nocase ascii
+    $wmi9  = "SWbemServices" nocase ascii
+    $wmi10 = "wmic.exe" nocase ascii
+    $wmi11 = "scrobj.dll" nocase ascii
 
   condition:
     any of ($wmi*)
@@ -137,10 +137,14 @@ rule Potential_Obfuscation_Strings {
 
   strings:
     $chr        = "Chr" ascii nocase wide fullword
+    $char       = "char" ascii nocase wide fullword
     $chrb       = "ChrB" ascii nocase wide
+    $ps_e       = "powershell -e" ascii nocase wide
+    $fromBase   = "FromBase" ascii nocase wide
     $chrw       = "ChrW" ascii nocase wide
     $strreverse = "StrReverse" ascii nocase wide
     $xor        = "Xor" ascii nocase wide fullword
+    $sign       = "^" ascii nocase wide fullword
 
   condition:
     any of them
