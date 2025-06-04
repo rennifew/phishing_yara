@@ -38,7 +38,6 @@ rule Suspicious_Attachment_Extensions {
     $jar = ".jar" nocase
     $msi = ".msi" nocase
     $hta = ".hta" nocase
-    $com = ".com" nocase
     $pif = ".pif" nocase
     $zip = ".zip" nocase
     $7z = ".7z" nocase
@@ -72,10 +71,12 @@ rule Out_Mail_Detected {
   meta:
     description = "Письмо пришло от внешнего почтового сервера."
   strings:
-    $vneshn_pochta = "=D0=92=D0=BD=D0=B5=D1=88=D0=BD=D1=8F=D1=8F =D0=BF=D0=BE=D1=87=D1=82=D0=B0" // Внешняя почта 
-    $vnesh = "=D0=92=D0=9D=D0=95=D0=A8=D0=9D=D0=AF=D0=AF =D0=9F=D0=9E=D0=A7=D0=A2=D0=90" // ВНЕШНЯЯ ПОЧТА
+    $s1 = "=D0=92=D0=BD=D0=B5=D1=88=D0=BD=D1=8F=D1=8F" // Внешняя
+    $s2 = "=D0=92=D0=9D=D0=95=D0=A8=D0=9D=D0=AF=D0=AF" // ВНЕШНЯЯ
+    $s3 = "=D0=BF=D0=BE=D1=87=D1=82=D0=B0" // почта
+    $s4 = "=D0=9F=D0=9E=D0=A7=D0=A2=D0=90" // ПОЧТА
   condition:
-    IS_Mail and any of them
+    IS_Mail and (($s1 and $s3) or ($s2 and $s4))
 }
 
 rule Mail_Contains_Social_Engineering {

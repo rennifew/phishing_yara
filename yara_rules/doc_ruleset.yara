@@ -1,7 +1,6 @@
 rule Contains_VBA_macro_code {
   meta:
     description = "Обнаружение MS Office документа с встроенным VBA макросом"
-    filetype    = "Office documents"
 
   strings:
     $officemagic = { D0 CF 11 E0 A1 B1 1A E1 }

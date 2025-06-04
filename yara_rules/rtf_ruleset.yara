@@ -10,23 +10,6 @@ rule Detect_RTF_objupdate {
     $magic1 in (0..30) and $upd and filesize > 50KB and filesize < 500KB
 }
 
-rule Detect_RTF_Malicious_objectest {
-  meta:
-    description = "Обнаруживает документы в формате RTF нестандартной версии и внедряет один из объектов, которые чаще всего встречаются в документах с эксплойтами"
-
-  strings:
-    // Embedded Objects
-    $obj1 = "\\objhtml" ascii
-    $obj2 = "\\objdata" ascii
-    $obj3 = "\\objupdate" ascii
-    $obj4 = "\\objemb" ascii
-    $obj5 = "\\objautlink" ascii
-    $obj6 = "\\objlink" ascii
-
-  condition:
-    uint32(0) == 0x74725c7b and ((not uint8(4) == 0x66 or not uint8(5) == 0x31 or not uint8(6) == 0x5c) and 1 of ($obj*))
-}
-
 rule Detect_RTF_Anti_Analysis_Header {
   meta:
     description = "Обнаружение строк найденных в вредоносных RTF-документов, которые используют техники анти-анализа"

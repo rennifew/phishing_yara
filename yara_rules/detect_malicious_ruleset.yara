@@ -149,19 +149,6 @@ rule Potential_Obfuscation_Strings {
     any of them
 }
 
-rule Detect_Download_Files_From_Internet_Using_PowerShell {
-  meta:
-    description = "Обнаружение загрузки файлов из интернета через PowerShell"
-
-  strings:
-    $netwebclient   = "Net.WebClient" ascii nocase wide
-    $downloadfile   = "DownloadFile" ascii nocase wide
-    $downloadstring = "DownloadString" ascii nocase wide
-
-  condition:
-    any of them
-}
-
 
 rule Detect_Potential_Persistence_Startup {
   meta:
