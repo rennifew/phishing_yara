@@ -7,7 +7,6 @@ rule Detect_WMI_Usage {
     $wmi2  = "Invoke-WmiMethod" nocase ascii
     $wmi3  = "wmiclass" nocase ascii
     $wmi4  = "Win32_Process" nocase ascii
-    $wmi5  = "WMI" nocase ascii
     $wmi6  = "root\\CIMV2" nocase ascii
     $wmi7  = "ManagementObjectSearcher" nocase ascii
     $wmi8  = "ManagementObject" nocase ascii
